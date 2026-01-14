@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PokéSearch</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <h1>PokéSearch 🔎</h1>
+
+        <div class="search-card">
+            <div class="filter-grid">
+                <div class="input-group">
+                    <label>STARTS WITH <i class="fa-solid fa-arrow-right-from-bracket"></i></label>
+                    <input type="text" id="start" maxlength="1" placeholder="A" oninput="searchPokemon()">
+                </div>
+
+                <div class="input-group">
+                    <label>INCLUDES <i class="fa-solid fa-circle-plus"></i></label>
+                    <input type="text" id="include" placeholder="char" oninput="searchPokemon()">
+                </div>
+
+                <div class="input-group">
+                    <label>EXCLUDES <i class="fa-solid fa-ban"></i></label>
+                    <input type="text" id="exclude" placeholder="x, y" oninput="searchPokemon()">
+                </div>
+
+                <div class="input-group">
+                    <label>LENGTH <i class="fa-solid fa-ruler-vertical"></i></label>
+                    <input type="number" id="length" placeholder="6" oninput="searchPokemon()">
+                </div>
+
+                <div class="input-group">
+                    <label>TYPE <i class="fa-solid fa-fire"></i></label>
+                    <select id="type-filter" onchange="searchPokemon()">
+                        <option value="">All Types</option>
+                        <option value="grass">Grass</option>
+                        <option value="fire">Fire</option>
+                        <option value="water">Water</option>
+                        <option value="bug">Bug</option>
+                        <option value="normal">Normal</option>
+                        <option value="poison">Poison</option>
+                        <option value="electric">Electric</option>
+                        <option value="ground">Ground</option>
+                        <option value="fairy">Fairy</option>
+                        <option value="fighting">Fighting</option>
+                        <option value="psychic">Psychic</option>
+                        <option value="rock">Rock</option>
+                        <option value="ghost">Ghost</option>
+                        <option value="ice">Ice</option>
+                        <option value="dragon">Dragon</option>
+                        <option value="flying">Flying</option>
+                        <option value="steel">Steel</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>SORT BY <i class="fa-solid fa-arrow-up-wide-short"></i></label>
+                    <select id="sort-stat" onchange="searchPokemon()">
+                        <option value="id">ID (Default)</option>
+                        <option value="hp">💖 HP</option>
+                        <option value="attack">🗡️ Attack</option>
+                        <option value="defense">🛡️ Defense</option>
+                        <option value="sp_atk">🔮 Sp. Atk</option>
+                        <option value="sp_def">🛡️ Sp. Def</option>
+                        <option value="speed">⚡ Speed</option>
+                        <option value="name">Name (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+            <button class="clear-btn"><i class="fa-solid fa-eraser"></i> Clear All Filters</button>
+            <p id="count-text"></p>
+        </div>
+
+        <div id="loading-spinner"><div class="spinner"></div></div>
+        <ul id="results"></ul>
+    </div>
+
+    <div id="pokeModal" class="modal" onclick="closeModal()">
+        <div id="modal-body" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

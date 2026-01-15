@@ -162,15 +162,15 @@ function openModal(id) {
 
 function renderStat(label, val, max, color) {
     const percent = Math.min((val / max) * 100, 100);
+    const displayPercent = Math.max(percent, 5); // ensure minimum width on small screens
     return `
         <div class="stat-row">
             <div class="stat-label">${label}</div>
             <div style="width:35px; font-weight:bold; font-size:0.8rem;">${val}</div>
-            <div class="stat-bar-container"><div class="stat-bar-fill" style="width:${percent}%; background:${color}"></div></div>
+            <div class="stat-bar-container"><div class="stat-bar-fill" style="width:${displayPercent}%; background:${color}"></div></div>
         </div>
     `;
 }
-
 function closeModal() { document.getElementById("pokeModal").style.display = "none"; }
 
 function clearFilters() {

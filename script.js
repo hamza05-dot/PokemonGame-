@@ -9,105 +9,176 @@ const typeColors = {
 };
 
 async function loadPokedex() {
-    const res = await fetch("./pokedex.csv");
-    const text = await res.text();
-    const rows = text.trim().split("\n");
+    try {
+        const response = await fetch('./pokedex.csv');
+        const data = await response.text();
+        const rows = data.trim().split('\n');
 
-    for (let i = 1; i < rows.length; i++) {
-        const c = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-        const t = c[10].replace(/[{}" ]/g, "").split(/[;,]/);
-        pokemonData.push({
-            id: c[0].replace(/"/g,""),
-            name: c[1].replace(/"/g,""),
-            hp: +c[4], attack: +c[5], defense: +c[6],
-            sp_atk: +c[7], sp_def: +c[8], speed: +c[9],
-            type1: t[0]?.toLowerCase() || "normal",
-            type2: t[1]?.toLowerCase() || "",
-            description: c[12].replace(/"/g,"")
-        });
+        for (let i = 1; i < rows.length; i++) {
+            const cols = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+            if (cols.length < 13) continue;
+
+            const cleanNum = val => Number(val.replace(/"/g, '').trim());
+            const cleanStr = val => val.replace(/"/g, '').trim();
+            const typeString = cols[10].replace(/[{}" ]/g, '');
+            const cleanTypes = typeString.split(/[;,]/);
+
+            pokemonData.push({
+                id: cleanStr(cols[0]),
+                name: cleanStr(cols[1]),
+                hp: cleanNum(cols[4]),
+                attack: cleanNum(cols[5]),
+                defense: cleanNum(cols[6]),
+                sp_atk: cleanNum(cols[7]),
+                sp_def: cleanNum(cols[8]),
+                speed: cleanNum(cols[9]),
+                type1: cleanTypes[0]?.toLowerCase() || 'normal',
+                type2: cleanTypes[1]?.toLowerCase() || '',
+                description: cleanStr(cols[12])
+            });
+        }
+
+        colorizeTypeDropdown();
+        document.getElementById("loading-spinner").style.display = "none";
+        searchPokemon();
+
+    } catch (err) {
+        console.error("CSV Loading Error:", err);
     }
-    document.getElementById("loading-spinner").style.display = "none";
-    searchPokemon();
+}
+
+function colorizeTypeDropdown() {
+    const select = document.getElementById("type-filter");
+    for (let option of select.options) {
+        const type = option.value;
+        if (type && typeColors[type]) {
+            option.style.backgroundColor = typeColors[type];
+            option.style.color = "white";
+        }
+    }
 }
 
 function searchPokemon() {
-    const start = startInput().value;
-    const include = includeInput().value;
-    const exclude = excludeInput().value;
-    const length = +lengthInput().value;
-    const type = typeSelect().value;
-    const sort = sortSelect().value;
+    const start = document.getElementById("start").value.toLowerCase();
+    const include = document.getElementById("include").value.toLowerCase();
+    const exclude = document.getElementById("exclude").value.toLowerCase();
+    const length = parseInt(document.getElementById("length").value);
+    const position = document.getElementById("position")?.value.toLowerCase().trim() || "";
+    const typeFilter = document.getElementById("type-filter").value.toLowerCase();
+    const sortStat = document.getElementById("sort-stat").value;
 
-    let list = pokemonData.filter(p => {
+    const typeSelect = document.getElementById("type-filter");
+    if (typeFilter && typeColors[typeFilter]) {
+        typeSelect.style.backgroundColor = typeColors[typeFilter];
+        typeSelect.style.color = "white";
+    } else {
+        typeSelect.style.backgroundColor = "white";
+        typeSelect.style.color = "black";
+    }
+
+    let filtered = pokemonData.filter(p => {
         const n = p.name.toLowerCase();
+
         if (length && n.length !== length) return false;
         if (start && !n.startsWith(start)) return false;
+
         if (include) {
-            for (let c of include) {
-                if (!n.includes(c)) return false;
-      } 
-         }
+            for (let c of include) if (!n.includes(c)) return false;
+        }
+
         if (exclude) {
-            for (let c of exclude.split(",").map(x => x.trim())) {
-                if (c && n.includes(c)) return false;
+            const excludedChars = exclude.split(',').map(c => c.trim()).filter(Boolean);
+            for (let c of excludedChars) if (n.includes(c)) return false;
+        }
+
+        if (position) {
+            const posLetters = position.split('');
+            for (let i = 0; i < posLetters.length; i++) {
+                if (posLetters[i] !== '_' && p.name[i]?.toLowerCase() !== posLetters[i]) return false;
             }
         }
-        if (type && p.type1 !== type && p.type2 !== type) return false;
+
+        if (typeFilter && p.type1 !== typeFilter && p.type2 !== typeFilter) return false;
+
         return true;
     });
 
-    list.sort((a,b) => {
-        if (sort === "name") return a.name.localeCompare(b.name);
-        if (sort === "id") return a.id - b.id;
-        return b[sort] - a[sort];
+    filtered.sort((a, b) => {
+        if (sortStat === "name") return a.name.localeCompare(b.name);
+        if (sortStat === "id") return parseInt(a.id) - parseInt(b.id);
+        return b[sortStat] - a[sortStat];
     });
 
-    document.getElementById("count-text").innerText = `Found ${list.length} Pokémon`;
-    renderResults(list);
+    document.getElementById("count-text").innerText = `Found ${filtered.length} Pokémon`;
+    renderResults(filtered);
 }
 
 function renderResults(list) {
-    document.getElementById("results").innerHTML = list.map(p => `
-        <li class="pokemon-card" style="border-bottom-color:${typeColors[p.type1]}" onclick="openModal('${p.id}')">
-            <div class="sprite-container">
-                <img src="./pokemon-images/${p.id}.png" onerror="this.src='./pokemon-images/0.png'">
-            </div>
-            <div>
-                <strong>#${p.id} ${p.name}</strong><br>
-                <span class="type-badge" style="background:${typeColors[p.type1]}">${p.type1}</span>
-                ${p.type2 ? `<span class="type-badge" style="background:${typeColors[p.type2]}">${p.type2}</span>` : ""}
-            </div>
-        </li>
-    `).join("");
+    const results = document.getElementById("results");
+    results.innerHTML = list.map(p => {
+        const color = typeColors[p.type1] || "#777";
+        return `
+            <li class="pokemon-card" style="border-bottom-color:${color}" onclick="openModal('${p.id}')">
+                <div class="sprite-container"><img src="./pokemon-images/${p.id}.png" onerror="this.src='./pokemon-images/0.png'" loading="lazy"></div>
+                <div>
+                    <span style="font-weight:900; display:block; text-transform:capitalize; color:#222;">#${p.id} ${p.name}</span>
+                    <span class="type-badge" style="background:${color}">${p.type1}</span>
+                    ${p.type2 ? `<span class="type-badge" style="background:${typeColors[p.type2]}">${p.type2}</span>` : ''}
+                </div>
+            </li>
+        `;
+    }).join('');
 }
 
 function openModal(id) {
     const p = pokemonData.find(x => x.id == id);
-    const c = typeColors[p.type1];
-    document.getElementById("modal-body").innerHTML = `
-        <img src="./pokemon-images/${p.id}.png">
-        <h2 style="color:${c}">${p.name}</h2>
-        <p>${p.description}</p>
+    if (!p) return;
+
+    const color = typeColors[p.type1] || "#777";
+    const body = document.getElementById("modal-body");
+    const total = p.hp + p.attack + p.defense + p.sp_atk + p.sp_def + p.speed;
+
+    body.style.border = `8px solid ${color}`;
+    body.style.background = `linear-gradient(180deg, #ffffff 60%, ${color}22 100%)`;
+
+    body.innerHTML = `
+        <img src="./pokemon-images/${p.id}.png" onerror="this.src='./pokemon-images/0.png'">
+        <h2 style="color:${color}; text-transform:capitalize; margin: 15px 0 5px;">${p.name}</h2>
+        <p style="font-size:0.85rem; color:#555; border-left: 5px solid ${color}; padding: 10px; background:#f5f5f5; border-radius:0 10px 10px 0; text-align:left; line-height:1.4;">
+            "${p.description}"
+        </p>
+        <div class="stats-box">
+            ${renderStat('💖', p.hp, 255, color)}
+            ${renderStat('🗡️', p.attack, 190, color)}
+            ${renderStat('🛡️', p.defense, 230, color)}
+            ${renderStat('🔮', p.sp_atk, 194, color)}
+            ${renderStat('🛡️', p.sp_def, 230, color)}
+            ${renderStat('⚡', p.speed, 180, color)}
+            <div style="text-align:right; font-weight:900; color:${color}; margin-top:12px; font-size:1rem;">BST: ${total}</div>
+        </div>
     `;
     document.getElementById("pokeModal").style.display = "flex";
 }
 
-function closeModal() {
-    document.getElementById("pokeModal").style.display = "none";
+function renderStat(label, val, max, color) {
+    const percent = Math.min((val / max) * 100, 100);
+    return `
+        <div class="stat-row">
+            <div class="stat-label">${label}</div>
+            <div style="width:35px; font-weight:bold; font-size:0.8rem;">${val}</div>
+            <div class="stat-bar-container"><div class="stat-bar-fill" style="width:${percent}%; background:${color}"></div></div>
+        </div>
+    `;
 }
+
+function closeModal() { document.getElementById("pokeModal").style.display = "none"; }
 
 function clearFilters() {
-    document.querySelectorAll("input").forEach(i => i.value = "");
-    typeSelect().value = "";
-    sortSelect().value = "id";
+    document.querySelectorAll('input').forEach(i => i.value = '');
+    const tSelect = document.getElementById("type-filter");
+    tSelect.value = ""; tSelect.style.backgroundColor = "white"; tSelect.style.color = "black";
+    document.getElementById("sort-stat").value = "id";
     searchPokemon();
 }
-
-const startInput = () => document.getElementById("start");
-const includeInput = () => document.getElementById("include");
-const excludeInput = () => document.getElementById("exclude");
-const lengthInput = () => document.getElementById("length");
-const typeSelect = () => document.getElementById("type-filter");
-const sortSelect = () => document.getElementById("sort-stat");
 
 loadPokedex();

@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>PokéSearch</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div class="app-container">
@@ -14,6 +13,7 @@
 
         <div class="search-card">
             <div class="filter-grid">
+
                 <div class="input-group">
                     <label>STARTS WITH <i class="fa-solid fa-arrow-right-from-bracket"></i></label>
                     <input type="text" id="start" maxlength="1" placeholder="A" oninput="searchPokemon()">
@@ -21,12 +21,17 @@
 
                 <div class="input-group">
                     <label>INCLUDES <i class="fa-solid fa-circle-plus"></i></label>
-                    <input type="text" id="include" placeholder="char" oninput="searchPokemon()">
+                    <input type="text" id="include" placeholder="letters" oninput="searchPokemon()">
                 </div>
 
                 <div class="input-group">
                     <label>EXCLUDES <i class="fa-solid fa-ban"></i></label>
                     <input type="text" id="exclude" placeholder="x, y" oninput="searchPokemon()">
+                </div>
+
+                <div class="input-group">
+                    <label>POSITION <i class="fa-solid fa-grip-lines"></i></label>
+                    <input type="text" id="position" placeholder="_ o _ b _ _" oninput="searchPokemon()">
                 </div>
 
                 <div class="input-group">
@@ -72,12 +77,10 @@
                         <option value="name">Name (A-Z)</option>
                     </select>
                 </div>
+
             </div>
 
-            <button class="clear-btn" onclick="clearFilters()">
-                <i class="fa-solid fa-eraser"></i> Clear All Filters
-            </button>
-
+            <button class="clear-btn" onclick="clearFilters()"><i class="fa-solid fa-eraser"></i> Clear All Filters</button>
             <p id="count-text"></p>
         </div>
 

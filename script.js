@@ -78,7 +78,6 @@ function searchPokemon() {
 
     let filtered = pokemonData.filter(p => {
         const n = p.name.toLowerCase();
-
         if (length && n.length !== length) return false;
         if (start && !n.startsWith(start)) return false;
 
@@ -142,6 +141,11 @@ function openModal(id) {
     body.style.background = `linear-gradient(180deg, #ffffff 60%, ${color}22 100%)`;
 
     body.innerHTML = `
+        <button class="modal-close" onclick="closeModal()" style="
+            position:absolute; top:10px; right:10px;
+            background:${color}; color:white; border:none; border-radius:50%;
+            width:30px; height:30px; font-weight:bold; font-size:18px; cursor:pointer;
+        ">×</button>
         <img src="./pokemon-images/${p.id}.png" onerror="this.src='./pokemon-images/0.png'">
         <h2 style="color:${color}; text-transform:capitalize; margin: 15px 0 5px;">${p.name}</h2>
         <p style="font-size:0.85rem; color:#555; border-left: 5px solid ${color}; padding: 10px; background:#f5f5f5; border-radius:0 10px 10px 0; text-align:left; line-height:1.4;">
@@ -157,12 +161,13 @@ function openModal(id) {
             <div style="text-align:right; font-weight:900; color:${color}; margin-top:12px; font-size:1rem;">BST: ${total}</div>
         </div>
     `;
+
     document.getElementById("pokeModal").style.display = "flex";
 }
 
 function renderStat(label, val, max, color) {
     const percent = Math.min((val / max) * 100, 100);
-    const displayPercent = Math.max(percent, 5); // ensure minimum width on small screens
+    const displayPercent = Math.max(percent, 5);
     return `
         <div class="stat-row">
             <div class="stat-label">${label}</div>
@@ -171,6 +176,7 @@ function renderStat(label, val, max, color) {
         </div>
     `;
 }
+
 function closeModal() { document.getElementById("pokeModal").style.display = "none"; }
 
 function clearFilters() {

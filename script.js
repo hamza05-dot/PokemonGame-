@@ -37,8 +37,6 @@ async function loadPokedex() {
                 description: cleanStr(cols[12])
             });
         }
-
-        colorizeTypeDropdown();
         document.getElementById("loading-spinner").style.display = "none";
         searchPokemon();
 
@@ -47,16 +45,6 @@ async function loadPokedex() {
     }
 }
 
-function colorizeTypeDropdown() {
-    const select = document.getElementById("type-filter");
-    for (let option of select.options) {
-        const type = option.value;
-        if (type && typeColors[type]) {
-            option.style.backgroundColor = typeColors[type];
-            option.style.color = "white";
-        }
-    }
-}
 
 function searchPokemon() {
     const start = document.getElementById("start").value.toLowerCase();

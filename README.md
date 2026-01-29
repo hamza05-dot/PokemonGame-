@@ -38,14 +38,10 @@ PokemonGame/
 ```
 Clone the repository
 ```
-Bash
-
 git clone [https://hamza05-dot.github.io/PokemonGame-/](https://hamza05-dot.github.io/PokemonGame-/)
 ```
 Navigate to the folder
 ```
-Bash
-
 cd PokemonGame
 ```
 Open in Browser Simply open index.html in your favorite web browser.
@@ -54,10 +50,10 @@ Open in Browser Simply open index.html in your favorite web browser.
 The interface uses CSS Media Queries to switch between a 3-column desktop view and a 2-column mobile view, ensuring a native-app feel on smartphones.
 
 🤝 Roadmap
-[ ] Add Pokémon Sprites (Images)
+[X] Add Pokémon Sprites (Images)
 
-[ ] Add Stats display (HP, Attack, etc.)
+[X] Add Stats display (HP, Attack, etc.)
 
 [ ] Implement Dark Mode toggle
 
-[ ] Add "Clear All" reset button
+[X] Add "Clear All" reset button

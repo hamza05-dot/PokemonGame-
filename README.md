@@ -35,16 +35,19 @@ PokemonGame/
 ├── script.js     # Search Logic & Type Colors
 └── pokemon.txt   # Tab-separated Database
 🛠️ Installation & Setup
+```
 Clone the repository
-
+```
 Bash
 
 git clone [https://hamza05-dot.github.io/PokemonGame-/](https://hamza05-dot.github.io/PokemonGame-/)
+```
 Navigate to the folder
-
+```
 Bash
 
 cd PokemonGame
+```
 Open in Browser Simply open index.html in your favorite web browser.
 
 📱 Mobile vs Desktop

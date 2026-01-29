@@ -1,5 +1,3 @@
-Markdown
-
 # 🔍 PokéSearch Terminal
 
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
@@ -50,6 +48,7 @@ Open in Browser Simply open index.html in your favorite web browser.
 The interface uses CSS Media Queries to switch between a 3-column desktop view and a 2-column mobile view, ensuring a native-app feel on smartphones.
 
 🤝 Roadmap
+```
 [X] Add Pokémon Sprites (Images)
 
 [X] Add Stats display (HP, Attack, etc.)
@@ -57,3 +56,4 @@ The interface uses CSS Media Queries to switch between a 3-column desktop view a
 [ ] Implement Dark Mode toggle
 
 [X] Add "Clear All" reset button
+```

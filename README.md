@@ -36,7 +36,7 @@ PokemonGame/
 ```
 Clone the repository
 ```
-git clone [https://hamza05-dot.github.io/PokemonGame-/](https://hamza05-dot.github.io/PokemonGame-/)
+git clone https://github.com/hamza05-dot/PokemonGame-
 ```
 Navigate to the folder
 ```

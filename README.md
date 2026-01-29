@@ -11,7 +11,7 @@ A sleek, mobile-responsive Pokémon search tool built with Vanilla JavaScript. F
 ---
 
 ## 🚀 Live Demo
-**Link:** [https://hamza05-dot.github.io/PokemonGame/](https://hamza05-dot.github.io/PokemonGame/)
+**Link:** [https://hamza05-dot.github.io/PokemonGame-/](https://hamza05-dot.github.io/PokemonGame-/)
 
 ---
 

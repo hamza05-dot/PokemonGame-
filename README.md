@@ -39,7 +39,7 @@ Clone the repository
 
 Bash
 
-git clone [https://github.com/YOUR_USERNAME/PokemonGame.git](https://github.com/YOUR_USERNAME/PokemonGame.git)
+git clone [https://hamza05-dot.github.io/PokemonGame-/](https://hamza05-dot.github.io/PokemonGame-/)
 Navigate to the folder
 
 Bash
